@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block body %}
+<h2>{{ tasting.name }}</h2>
+<p>
+  计划 {{ tasting.planned_pots }} 壶 · 已交 {{ rows|length }} 笔 ·
+  建会人 {{ tasting.created_by }} · 邀请：{{ invites|join("、") }}
+</p>
+{% if can_write %}
+<form method="post" action="{{ url_for('session_cupping_create', sid=tasting.id) }}" data-swap="1">
+  <h3>交一笔会内审评</h3>
+  <input name="lot" placeholder="批次" required />
+  <input name="aroma" type="number" step="0.1" min="0" max="10" placeholder="香气" required />
+  <input name="taste" type="number" step="0.1" min="0" max="10" placeholder="滋味" required />
+  <input name="liquor" type="number" step="0.1" min="0" max="10" placeholder="汤色" required />
+  <button>提交</button>
+</form>
+{% endif %}
+<table>
+  <thead><tr><th>审评员</th><th>批次</th><th>加权分</th><th>结论</th><th>说明</th></tr></thead>
+  <tbody id="rows">
+    {% for row in rows %}{% include "_session_row.html" %}{% endfor %}
+  </tbody>
+</table>
+{% endblock %}
