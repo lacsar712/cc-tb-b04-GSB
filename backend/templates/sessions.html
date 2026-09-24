@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block body %}
+{% if can_write %}
+<form method="post" action="{{ url_for('create_session') }}">
+  <h2>开一场拼配试饮会</h2>
+  <input name="name" placeholder="会名" required />
+  <input name="planned_pots" type="number" min="1" step="1" placeholder="计划壶数" required />
+  <input name="invitees" placeholder="邀请的审评员，逗号分隔" required />
+  <button>建会</button>
+</form>
+{% endif %}
+<table>
+  <thead><tr><th>会名</th><th>计划壶数</th><th>发起人</th><th></th></tr></thead>
+  <tbody>
+    {% for s in sessions %}
+    <tr>
+      <td>{{ s.name }}</td>
+      <td>{{ s.planned_pots }}</td>
+      <td>{{ s.created_by }}</td>
+      <td><a href="{{ url_for('session_detail', session_id=s.id) }}">会合页</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

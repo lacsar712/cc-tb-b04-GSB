@@ -33,6 +33,35 @@ def main():
             created_by text NOT NULL
         )"""
     )
+    cur.execute(
+        """CREATE TABLE IF NOT EXISTS tasting_sessions (
+            id serial PRIMARY KEY,
+            name text NOT NULL,
+            planned_pots integer NOT NULL,
+            created_by text NOT NULL
+        )"""
+    )
+    cur.execute(
+        """CREATE TABLE IF NOT EXISTS tasting_invitees (
+            session_id integer NOT NULL REFERENCES tasting_sessions (id) ON DELETE CASCADE,
+            taster text NOT NULL,
+            PRIMARY KEY (session_id, taster)
+        )"""
+    )
+    cur.execute(
+        """CREATE TABLE IF NOT EXISTS tasting_cuppings (
+            id serial PRIMARY KEY,
+            session_id integer NOT NULL REFERENCES tasting_sessions (id) ON DELETE CASCADE,
+            pot integer NOT NULL,
+            aroma double precision NOT NULL,
+            taste double precision NOT NULL,
+            liquor double precision NOT NULL,
+            score double precision NOT NULL,
+            verdict text NOT NULL,
+            note text NOT NULL,
+            created_by text NOT NULL
+        )"""
+    )
     cur.execute("SELECT COUNT(*) FROM cuppings")
     if cur.fetchone()[0] == 0:
         for lot, aroma, taste, liquor in (("春茶-A", 8, 8, 7), ("夏茶-C", 5, 4, 6)):
